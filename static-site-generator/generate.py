@@ -193,3 +193,7 @@ if __name__ == "__main__":
 
     # Generate the individual picture pages for all used pictures
     write_all_view_pages(static_site_root_path, metadata, all_used_pictures)
+
+    # Copy over landing page
+    landing_page_index_path = os.path.join(static_site_root_path, INDEX_HTML)
+    shutil.copyfile("landing_page.html", landing_page_index_path)
