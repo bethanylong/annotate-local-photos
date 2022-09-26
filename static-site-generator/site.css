@@ -1,0 +1,93 @@
+html {
+    font-family: "Noto Sans", sans-serif;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#header {
+    padding: 2em;
+    background-color: cornflowerblue;
+    color: white;
+}
+
+footer {
+    background-color: cornflowerblue;
+    color: white;
+    margin-top: auto;
+    padding: 1em;
+}
+
+#img-container {
+    width: 100%;
+}
+
+img {
+    max-width: 100%;
+    max-height: 90vh;
+    display: block;
+    margin: 0 auto;
+}
+
+#img-description {
+    max-width: 40em;
+}
+
+.centered {
+    margin: 0;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5rem;
+}
+
+#content {
+    width: 100%;
+    max-width: 60em;
+    margin: 1em auto;
+}
+
+#cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2em;
+}
+
+.card {
+    height: 12em;
+    width: 18em;
+    border-radius: 0.5em;
+    color: white;
+    text-align: center;
+    position: relative;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: local fixed;
+    background-size: cover;
+}
+
+.card span {
+    font-size: larger;
+    font-weight: bold;
+    position: absolute;
+    bottom: 0.5em;
+    transform: translate(-50%, 0);
+    width: 90%;
+}
+
+.card-large {
+    height: 18em;
+    width: 28em;
+    text-align: left;
+}
+
+.card-large span {
+    transform: none;
+    left: 1em;
+}

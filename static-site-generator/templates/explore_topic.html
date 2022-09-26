@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ topic }} - Tahoma Science</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans">
+    <link rel="stylesheet" href="../../site.css">
+<style>
+.card-burroughs-emmons-glacier {
+    background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url("../../images/burroughs-emmons-glacier.jpg");
+}
+</style>
+</head>
+<body>
+    <div id="header">
+        <p class="centered">Tahoma Science</p>
+    </div>
+    <div id="content">
+        <h1>{{ topic }}</h1>
+        <div id="cards">
+            {% for picture in pictures %}
+            <a href="../../view/{{ picture["slug"] }}">
+                <div class="card card-large" style="{{ picture["style"] }}"><span>{{ picture["headline"] }}</span></div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <footer>
+        <div>
+            <p>&#169; 2022 Bethany Long</p>
+            <p>Teachers and students are welcome to use these images freely.</p>
+        </div>
+    </footer>
+</body>
+</html>

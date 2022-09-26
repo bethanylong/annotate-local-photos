@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Explore - Tahoma Science</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans">
+    <link rel="stylesheet" href="../site.css">
+</head>
+<body>
+    <div id="header">
+        <p class="centered">Tahoma Science</p>
+    </div>
+    <div id="content">
+        <h1>Explore</h1>
+        <h2>Pick a topic:</h2>
+        <div id="cards">
+            {% for topic in topics %}
+            <a href="{{ topics[topic]["slug"] }}">
+                <div class="card" style="{{ topics[topic]["style"] }}"><span>{{ topics[topic]["name"] }}</span></div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    <footer>
+        <div>
+            <p>&#169; 2022 Bethany Long</p>
+            <p>Teachers and students are welcome to use these images freely.</p>
+        </div>
+    </footer>
+</body>
+</html>

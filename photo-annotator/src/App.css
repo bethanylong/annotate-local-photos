@@ -1,0 +1,41 @@
+img {
+    max-width: 40em;
+}
+
+input {
+    font-family: inherit;
+    font-size: inherit;
+}
+
+textarea {
+    font-family: inherit;
+    font-size: inherit;
+    resize: vertical;
+}
+
+.small-textarea {
+    height: 3em;
+}
+
+.big-textarea {
+    height: 10em;
+}
+
+.App {
+    padding: 1em;
+}
+
+.pictures-grid {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    column-gap: 1em;
+    row-gap: 3em;
+}
+
+.picture-details-grid {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    grid-auto-rows: min-content;
+    column-gap: 1em;
+    row-gap: 0.5em;
+}
