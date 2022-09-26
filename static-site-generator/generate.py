@@ -6,6 +6,7 @@ import itertools
 import json
 import os
 import shutil
+import subprocess
 import sys
 
 CSS_FILE = "site.css"
@@ -17,49 +18,49 @@ TOPICS = {
         "name": "engineering",
         "slug": "engineering",
         "image": "carbon-river-suspension-bridge-tower-cables.jpg",
-        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../images/carbon-river-suspension-bridge-tower-cables.jpg')",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/carbon-river-suspension-bridge-tower-cables.jpg')",
     },
     "erosion": {
         "name": "erosion",
         "slug": "erosion",
         "image": "burroughs-sign-erosion-windward.jpg",
-        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../images/burroughs-sign-erosion-windward.jpg')",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/burroughs-sign-erosion-windward.jpg')",
     },
     "glacier": {
         "name": "glacier",
         "slug": "glacier",
         "image": "paradise-nisqually-river-headwaters.jpg",
-        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../images/paradise-nisqually-river-headwaters.jpg')",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/paradise-nisqually-river-headwaters.jpg')",
     },
     "river": {
         "name": "river",
         "slug": "river",
         "image": "carbon-river-boulders.jpg",
-        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../images/carbon-river-boulders.jpg')",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/carbon-river-boulders.jpg')",
     },
     "subalpine meadow": {
         "name": "subalpine meadow",
         "slug": "subalpine-meadow",
         "image": "indian-henry-wildflowers-and-cabin.jpg",
-        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../images/indian-henry-wildflowers-and-cabin.jpg')",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/indian-henry-wildflowers-and-cabin.jpg')",
     },
     "temperate rainforest": {
         "name": "temperate rainforest",
         "slug": "temperate-rainforest",
         "image": "carbon-river-tree-ferns.jpg",
-        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../images/carbon-river-tree-ferns.jpg')",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/carbon-river-tree-ferns.jpg')",
     },
     "tundra": {
         "name": "tundra",
         "slug": "tundra",
         "image": "panhandle-gap-tundra.jpg",
-        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../images/panhandle-gap-tundra.jpg')",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/panhandle-gap-tundra.jpg')",
     },
     "volcanism": {
         "name": "volcanism",
         "slug": "volcanism",
         "image": "south-puyallup-columns-wide-view.jpg",
-        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../images/south-puyallup-columns-wide-view.jpg')",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/south-puyallup-columns-wide-view.jpg')",
     },
 }
 
@@ -113,7 +114,7 @@ def render_explore_topic_page(lowercase_topic, picture_filenames, annotator_meta
     for picture_filename in picture_filenames:
         picture_info = annotator_metadata[picture_filename]
         picture_info["slug"] = picture_filename.split(".")[0]
-        picture_info["style"] = f'background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url(\'../../images/{picture_filename}\')'
+        picture_info["style"] = f'background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url(\'../../thumbnails/{picture_filename}\')'
         pictures.append(picture_info)
 
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
@@ -159,6 +160,11 @@ def write_all_view_pages(root, annotator_metadata, all_used_pictures):
         write_to_path(view_dir_path, INDEX_HTML, content)
 
 
+def generate_thumbnail(orig_picture_path, thumbnail_path):
+    cmd = ("convert", orig_picture_path, "-resize", "400x400>", "-quality", "80%", thumbnail_path)
+    subprocess.run(cmd)
+
+
 if __name__ == "__main__":
     # Figure out which tag(s) each picture belongs to
     annotator_json_path = sys.argv[1]
@@ -184,12 +190,16 @@ if __name__ == "__main__":
     new_picture_dir_path = os.path.join(static_site_root_path, "images")
     os.makedirs(new_picture_dir_path, exist_ok=True)
 
-    # Copy over all used pictures
+    # Copy over all used pictures and generate thumbnails
     all_used_pictures = set(list(itertools.chain(*list(by_tag.values()))))
+    thumbnail_dir_path = os.path.join(static_site_root_path, "thumbnails")
+    os.makedirs(thumbnail_dir_path, exist_ok=True)
     for picture in all_used_pictures:
         orig_picture_path = os.path.join(orig_picture_dir_path, picture)
         new_picture_path = os.path.join(new_picture_dir_path, picture)
+        thumbnail_path = os.path.join(thumbnail_dir_path, picture)
         shutil.copyfile(orig_picture_path, new_picture_path)
+        generate_thumbnail(orig_picture_path, thumbnail_path)
 
     # Generate the individual picture pages for all used pictures
     write_all_view_pages(static_site_root_path, metadata, all_used_pictures)
