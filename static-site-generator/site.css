@@ -82,12 +82,16 @@ img {
 }
 
 .card-large {
-    height: 18em;
-    width: 28em;
+    height: min(18em, 60vh);
+    width: min(28em, 100vw);
     text-align: left;
 }
 
 .card-large span {
     transform: none;
     left: 1em;
+}
+
+#img-text {
+    margin: 10px;
 }

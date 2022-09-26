@@ -16,11 +16,13 @@
         <div id="img-container">
             <img src="../../images/{{ filename }}"></img>
         </div>
-        <h1>{{ headline }}</h1>
-        <div id="img-description">
-            {% for line in description %}
-                <p>{{ line }}</p>
-            {% endfor %}
+        <div id="img-text">
+            <h1>{{ headline }}</h1>
+            <div id="img-description">
+                {% for line in description %}
+                    <p>{{ line }}</p>
+                {% endfor %}
+            </div>
         </div>
     </div>
     <footer>

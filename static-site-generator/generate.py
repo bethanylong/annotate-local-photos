@@ -14,6 +14,12 @@ INDEX_HTML = "index.html"
 TEMPLATE_DIR = "templates/"
 
 TOPICS = {
+    "animals": {
+        "name": "animals",
+        "slug": "animals",
+        "image": "paradise-marmot-on-rock-2022-09.jpg",
+        "style": "background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('../thumbnails/paradise-marmot-on-rock-2022-09.jpg')",
+    },
     "engineering": {
         "name": "engineering",
         "slug": "engineering",
