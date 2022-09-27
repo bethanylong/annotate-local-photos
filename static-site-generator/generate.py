@@ -3,9 +3,11 @@
 from PIL import Image, ExifTags
 import collections
 from datetime import datetime
+from exif import Image as ExifImage
 from jinja2 import Environment, FileSystemLoader
 import itertools
 import json
+import requests
 import os
 import shutil
 import subprocess
@@ -142,6 +144,38 @@ def write_all_topic_pages(root, annotator_metadata, by_tag):
         write_to_path(topic_dir_path, INDEX_HTML, content)
 
 
+# https://medium.com/spatial-data-science/how-to-extract-gps-coordinates-from-images-in-python-e66e542af354
+def decimal_coords(coords, ref):
+    decimal_degrees = coords[0] + coords[1] / 60 + coords[2] / 3600
+    if ref == "S" or ref == "W":
+        decimal_degrees = -decimal_degrees
+    return decimal_degrees
+
+
+def write_map_file(root, picture_filename, latitude, longitude):
+    base = "https://maps.googleapis.com/maps/api/staticmap"
+    size = "500x400"
+    scale = "2"
+    markers = f"{latitude},{longitude}"
+    center = "47.0514,-122.1044"  # near Orting
+    visible = "Tacoma"
+    # Only fetch from API if we haven't loaded this one before
+    map_dir_path = os.path.join(root, "maps")
+    map_filename = f"{picture_filename}_map.png"  # ugly but whatever
+    map_path = os.path.join(map_dir_path, map_filename)
+    if not os.path.isfile(map_path):
+        key = os.environ.get("GOOGLE_MAPS_API_KEY")
+        if not key:
+            # I'm super duper tempted to make this a KeyError
+            raise Exception("Must have GOOGLE_MAPS_API_KEY env var")
+        url = f"{base}?key={key}&size={size}&scale={scale}&markers={markers}&center={center}&visible={visible}"
+
+        os.makedirs(map_dir_path, exist_ok=True)
+        response = requests.get(url)
+        with open(map_path, "wb") as fh:
+            fh.write(response.content)
+
+
 def render_view_page(root, slug, picture_filename, picture_metadata):
     headline = picture_metadata["headline"]
 
@@ -174,6 +208,23 @@ def render_view_page(root, slug, picture_filename, picture_metadata):
         after_hour = dt_obj.strftime(":%M %p")
         timestamp = before_day + no_zero_padded_day + between_day_and_hour + no_zero_padded_hour + after_hour
 
+    # I'm puking
+    with open(full_picture_path, "rb") as image_bytes:
+        image_obj = ExifImage(image_bytes)
+        try:
+            latitude = decimal_coords(image_obj.gps_latitude, image_obj.gps_latitude_ref)
+            longitude = decimal_coords(image_obj.gps_longitude, image_obj.gps_longitude_ref)
+
+            # https://xkcd.com/2170/
+            latitude = round(latitude, 4)
+            longitude = round(longitude, 4)
+
+            write_map_file(root, picture_filename, latitude, longitude)
+            map_ = f"../../maps/{picture_filename}_map.png"
+        except AttributeError:
+            # No GPS info in this image
+            map_ = None
+
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     tpl = env.get_template("view.html")
     content = tpl.render(
@@ -182,6 +233,7 @@ def render_view_page(root, slug, picture_filename, picture_metadata):
         description=description,
         location=location,
         timestamp=timestamp,
+        map_ = map_,
     )
     return content
 

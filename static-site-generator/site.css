@@ -38,6 +38,11 @@ img {
     margin: 0 auto;
 }
 
+.map {
+    max-width: min(100vw, 30em);
+    margin: 0;
+}
+
 #img-description {
     max-width: 40em;
 }

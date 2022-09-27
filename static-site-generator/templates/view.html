@@ -24,8 +24,11 @@
                 {% endfor %}
             </div>
             <div id="img-metadata">
-                <p><strong>Location:</strong> {{ location }}</p>
                 <p><strong>Visited:</strong> {{ timestamp }}</p>
+                <p><strong>Location:</strong> {{ location }}</p>
+                {% if map_ %}
+                <img class="map" src="{{ map_ }}"></img>
+                {% endif %}
             </div>
         </div>
     </div>
