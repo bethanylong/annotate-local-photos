@@ -1,6 +1,8 @@
 #!/usr/bin/env python3.10
 
+from PIL import Image, ExifTags
 import collections
+from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 import itertools
 import json
@@ -140,12 +142,37 @@ def write_all_topic_pages(root, annotator_metadata, by_tag):
         write_to_path(topic_dir_path, INDEX_HTML, content)
 
 
-def render_view_page(slug, picture_filename, picture_metadata):
+def render_view_page(root, slug, picture_filename, picture_metadata):
     headline = picture_metadata["headline"]
+
     try:
         description = picture_metadata["description"].split("\n\n")
     except KeyError:
         description = [""]
+
+    try:
+        location = picture_metadata["locate"]
+    except KeyError:
+        # We do actually want to enforce that each picture has a location
+        raise
+
+    # Assume we've copied it over already
+    full_picture_path = os.path.join(root, "images", picture_filename)
+    with Image.open(full_picture_path) as image_obj:
+        exif_timestamp_key = 306
+        assert ExifTags.TAGS[exif_timestamp_key] == "DateTime"
+        exif_timestamp_str = image_obj.getexif()[exif_timestamp_key]
+        timestamp = exif_timestamp_str
+        exif_timestamp_fmt = "%Y:%m:%d %H:%M:%S"
+        dt_obj = datetime.strptime(exif_timestamp_str, exif_timestamp_fmt)
+        # grumble grumble
+        #nicer_fmt = "%B %d, %Y at %I:%M %p"
+        before_day = dt_obj.strftime("%B ")
+        no_zero_padded_day = str(int(dt_obj.strftime("%d")))
+        between_day_and_hour = dt_obj.strftime(", %Y at ")
+        no_zero_padded_hour = str(int(dt_obj.strftime("%I")))
+        after_hour = dt_obj.strftime(":%M %p")
+        timestamp = before_day + no_zero_padded_day + between_day_and_hour + no_zero_padded_hour + after_hour
 
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     tpl = env.get_template("view.html")
@@ -153,6 +180,8 @@ def render_view_page(slug, picture_filename, picture_metadata):
         headline=headline,
         filename=picture_filename,
         description=description,
+        location=location,
+        timestamp=timestamp,
     )
     return content
 
@@ -161,7 +190,7 @@ def write_all_view_pages(root, annotator_metadata, all_used_pictures):
     for picture_filename in all_used_pictures:
         slug = picture_filename.split(".")[0]
         picture_metadata = annotator_metadata[picture_filename]
-        content = render_view_page(slug, picture_filename, picture_metadata)
+        content = render_view_page(root, slug, picture_filename, picture_metadata)
         view_dir_path = os.path.join(root, "view", slug)
         write_to_path(view_dir_path, INDEX_HTML, content)
 
