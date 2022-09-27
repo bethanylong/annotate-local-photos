@@ -205,7 +205,8 @@ if __name__ == "__main__":
         new_picture_path = os.path.join(new_picture_dir_path, picture)
         thumbnail_path = os.path.join(thumbnail_dir_path, picture)
         shutil.copyfile(orig_picture_path, new_picture_path)
-        generate_thumbnail(orig_picture_path, thumbnail_path)
+        if not os.path.isfile(thumbnail_path):
+            generate_thumbnail(orig_picture_path, thumbnail_path)
 
     # Generate the individual picture pages for all used pictures
     write_all_view_pages(static_site_root_path, metadata, all_used_pictures)
