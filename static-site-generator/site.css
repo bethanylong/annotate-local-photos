@@ -39,7 +39,7 @@ img {
 }
 
 .map {
-    max-width: min(100vw, 30em);
+    max-width: min(90vw, 30em);
     margin: 0;
 }
 
